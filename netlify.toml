@@ -1,10 +1,6 @@
 [build]
   functions = "netlify/functions"  # 指定函数目录
 
-[functions]
-  # 指定Python运行时（需≥3.8，Netlify支持的版本可查文档）
-  runtime = "python3.10"
-
-  # 可选：设置函数超时时间（默认10秒，百度API调用建议延长）
-  [functions.face-detect]
-    timeout = 20
+# 仅保留函数超时配置（可选），去掉runtime相关错误配置
+[functions.face-detect]
+  timeout = 20  # 函数超时时间（按需设置，默认10秒）
