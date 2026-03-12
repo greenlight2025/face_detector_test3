@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>百度人脸检测</title>
+    <style>
+        body { max-width: 800px; margin: 20px auto; padding: 0 20px; }
+        #result { margin-top: 20px; padding: 10px; border: 1px solid #ccc; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>人脸检测工具</h1>
+    <input type="file" id="image-upload" accept="image/*">
+    <button onclick="detectFace()">检测人脸</button>
+    <div id="result"></div>
+
+    <script>
+        // 替换为你的Netlify函数地址（部署后生成）
+        const API_URL = "/.netlify/functions/face-detect";
+
+        async function detectFace() {
+            const fileInput = document.getElementById("image-upload");
+            const resultDiv = document.getElementById("result");
+            
+            if (!fileInput.files[0]) {
+                resultDiv.textContent = "请先选择图片！";
+                return;
+            }
+
+            // 读取图片并转为BASE64
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                // 去掉BASE64前缀（data:image/jpeg;base64,）
+                const base64Data = e.target.result.split(",")[1];
+                
+                try {
+                    // 调用Netlify函数
+                    const response = await fetch(API_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ image: base64Data })
+                    });
+                    const data = await response.json();
+                    // 格式化输出结果
+                    resultDiv.textContent = JSON.stringify(data, null, 2);
+                } catch (error) {
+                    resultDiv.textContent = "请求失败：" + error.message;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
