@@ -1,6 +1,8 @@
+# netlify.toml 完整内容（仅保留必要配置）
 [build]
-  functions = "netlify/functions"  # 指定函数目录
+  publish = "."          # 指定前端页面根目录（当前目录）
+  functions = "netlify/functions"  # 明确指向函数目录（相对路径）
 
-# 仅保留函数超时配置（可选），去掉runtime相关错误配置
+# 可选：函数超时配置（避免百度API调用超时）
 [functions.face-detect]
-  timeout = 20  # 函数超时时间（按需设置，默认10秒）
+  timeout = 20
